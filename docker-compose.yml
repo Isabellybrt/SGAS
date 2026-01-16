@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: sgas_db
+    ports:
+      - "6543:5432"
+    environment:
+      POSTGRES_USER: app_user
+      POSTGRES_PASSWORD: app123
+      POSTGRES_DB: sgas
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - sgas_network
+
+  redis:
+    image: redis:7
+    container_name: sgas_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - sgas_network
+
+networks:
+  sgas_network:
+    driver: bridge
+
+volumes:
+  postgres_data:

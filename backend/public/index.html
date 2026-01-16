@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>SGAS - Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: sans-serif; margin: 24px; }
+    section { margin-bottom: 24px; }
+    input { margin-right: 8px; padding: 6px; }
+    button { padding: 6px 10px; }
+    pre { background: #f5f5f5; padding: 10px; overflow: auto; }
+  </style>
+  </head>
+  <body>
+    <h1>SGAS</h1>
+    <section>
+      <h2>Login</h2>
+      <input id="email" placeholder="email" />
+      <input id="password" type="password" placeholder="senha" />
+      <button id="loginBtn">Login</button>
+      <pre id="token"></pre>
+    </section>
+    <section>
+      <h2>Criar Agendamento</h2>
+      <input id="serviceId" placeholder="serviceId" />
+      <input id="startAt" placeholder="2026-01-20T14:00:00Z" />
+      <button id="createBtn">Criar</button>
+      <pre id="result"></pre>
+    </section>
+    <script>
+      let accessToken = null;
+      document.getElementById('loginBtn').onclick = async () => {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const res = await fetch('/auth/login', {
+          method: 'POST', headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        accessToken = data.accessToken;
+        document.getElementById('token').textContent = accessToken ? 'Token obtido' : JSON.stringify(data, null, 2);
+      };
+      document.getElementById('createBtn').onclick = async () => {
+        const serviceId = document.getElementById('serviceId').value;
+        const startAt = document.getElementById('startAt').value;
+        const res = await fetch('/appointments', {
+          method: 'POST',
+          headers: { 'Content-Type':'application/json', 'Authorization': `Bearer ${accessToken}` },
+          body: JSON.stringify({ serviceId, startAt })
+        });
+        const data = await res.json();
+        document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+      };
+    </script>
+  </body>
+</html>
