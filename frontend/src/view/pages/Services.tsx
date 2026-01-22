@@ -1,63 +1,8 @@
-import { useEffect, useState } from 'react';
-import api from '../api/axios';
-import { useAuth } from '../context/AuthContext';
-import { toast } from 'react-toastify';
 import Navbar from '../components/Navbar';
-
-interface Service {
-  id: string;
-  name: string;
-  durationMinutes: number;
-  price: number;
-  active: boolean;
-}
+import { useServicesViewModel } from '../../viewmodel/useServicesViewModel';
 
 export default function Services() {
-  const [services, setServices] = useState<Service[]>([]);
-  const { user } = useAuth();
-  const isAdmin = user?.role === 'admin';
-
-  const [name, setName] = useState('');
-  const [duration, setDuration] = useState(30);
-  const [price, setPrice] = useState(0);
-
-  useEffect(() => {
-    fetchServices();
-  }, []);
-
-  const fetchServices = async () => {
-    try {
-      const res = await api.get('/services');
-      setServices(res.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleCreate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      await api.post('/services', { name, durationMinutes: Number(duration), price: Number(price) });
-      toast.success('Serviço criado!');
-      setName('');
-      setDuration(30);
-      setPrice(0);
-      fetchServices();
-    } catch (error) {
-      toast.error('Erro ao criar serviço');
-    }
-  };
-
-  const handleDelete = async (id: string) => {
-    if (!confirm('Tem certeza?')) return;
-    try {
-      await api.delete(`/services/${id}`);
-      toast.success('Serviço removido');
-      fetchServices();
-    } catch (error) {
-      toast.error('Erro ao remover');
-    }
-  };
+  const { services, isAdmin, name, setName, duration, setDuration, price, setPrice, handleCreate, handleDelete } = useServicesViewModel();
 
   return (
     <div className="min-h-screen bg-gray-50">

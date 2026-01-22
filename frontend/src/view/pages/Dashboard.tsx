@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import { useAuth } from '../context/AuthContext';
+import { useDashboardViewModel } from '../../viewmodel/useDashboardViewModel';
 
 export default function Dashboard() {
-  const { user } = useAuth();
+  const { user } = useDashboardViewModel();
 
   return (
     <div className="min-h-screen bg-gray-50">

@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
-import Services from './pages/Services';
-import Appointments from './pages/Appointments';
+import Login from './view/pages/Login';
+import Register from './view/pages/Register';
+import Dashboard from './view/pages/Dashboard';
+import Services from './view/pages/Services';
+import Appointments from './view/pages/Appointments';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

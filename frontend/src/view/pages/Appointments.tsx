@@ -1,95 +1,9 @@
-import { useEffect, useState } from 'react';
-import api from '../api/axios';
-import { useAuth } from '../context/AuthContext';
-import { toast } from 'react-toastify';
 import Navbar from '../components/Navbar';
 import { format } from 'date-fns';
-
-interface Service {
-  id: string;
-  name: string;
-  durationMinutes: number;
-}
-
-interface Appointment {
-  id: string;
-  startAt: string;
-  endAt: string;
-  status: string;
-  service: Service;
-}
+import { useAppointmentsViewModel } from '../../viewmodel/useAppointmentsViewModel';
 
 export default function Appointments() {
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [services, setServices] = useState<Service[]>([]);
-  const { user } = useAuth();
-  
-  const [serviceId, setServiceId] = useState('');
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
-
-  useEffect(() => {
-    fetchAppointments();
-    fetchServices();
-  }, []);
-
-  const fetchAppointments = async () => {
-    try {
-      if (user) {
-        // If user is admin, maybe show all? But for now let's show filtered by user if normal user.
-        // If admin, I might want to see all.
-        const url = user.role === 'admin' ? '/appointments' : `/appointments?customerId=${user.id}`;
-        const res = await api.get(url);
-        setAppointments(res.data);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const fetchServices = async () => {
-    try {
-      const res = await api.get('/services');
-      setServices(res.data.filter((s: any) => s.active));
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleCreate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!serviceId || !date || !time) {
-      toast.warning('Preencha todos os campos');
-      return;
-    }
-    
-    const startAt = new Date(`${date}T${time}:00`);
-    
-    try {
-      await api.post('/appointments', {
-        serviceId,
-        startAt: startAt.toISOString(),
-      });
-      toast.success('Agendamento realizado!');
-      setServiceId('');
-      setDate('');
-      setTime('');
-      fetchAppointments();
-    } catch (error) {
-      toast.error('Erro ao agendar. Verifique se o horário está disponível.');
-    }
-  };
-
-  const handleCancel = async (id: string) => {
-    if (!confirm('Deseja cancelar este agendamento?')) return;
-    try {
-      await api.delete(`/appointments/${id}`);
-      toast.success('Agendamento cancelado');
-      fetchAppointments();
-    } catch (error) {
-      toast.error('Erro ao cancelar');
-    }
-  };
+  const { appointments, services, serviceId, setServiceId, date, setDate, time, setTime, handleCreate, handleCancel } = useAppointmentsViewModel();
 
   return (
     <div className="min-h-screen bg-gray-50">

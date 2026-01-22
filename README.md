@@ -61,6 +61,10 @@ cd TrabalhoFinal
    JWT_SECRET=sua_chave_secreta_super_segura
    REDIS_URL=redis://localhost:6379
    ```
+4. Pegue sua JWT_SECRET do arquivo `.env` e coloque na variável `JWT_SECRET` do arquivo `frontend/src/context/AuthContext.ts`.
+´´´
+   node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+´´´
 
 ### Passo 3: Configuração do Frontend
 1. Abra um novo terminal e navegue até a pasta do frontend:
@@ -110,9 +114,15 @@ TrabalhoFinal/
 │   └── ...
 ├── frontend/               # Interface do Usuário (React + Vite)
 │   ├── src/
-│   │   ├── pages/          # Páginas da aplicação
-│   │   ├── components/     # Componentes reutilizáveis
-│   │   └── api/            # Configuração do Axios
+│   │   ├── model/          # Regras de Negócio e Dados
+│   │   │   ├── entities/   # Tipos e Interfaces (Domínio)
+│   │   │   ├── repositories/ # Acesso a Dados (API/Axios)
+│   │   │   └── services/   # Lógica de Negócio
+│   │   ├── viewmodel/      # Gestão de Estado (Custom Hooks)
+│   │   ├── view/           # Interface Visual
+│   │   │   ├── pages/      # Telas da aplicação
+│   │   │   └── components/ # Componentes reutilizáveis
+│   │   └── context/        # Contextos Globais (Auth)
 │   └── ...
 └── docker-compose.yml      # Configuração dos serviços Docker (DB e Redis)
 ```

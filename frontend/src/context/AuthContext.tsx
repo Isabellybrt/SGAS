@@ -1,16 +1,10 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { jwtDecode } from 'jwt-decode';
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: 'user' | 'admin';
-}
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import type { User } from '../model/entities/User';
+import { authService } from '../model/services/AuthService';
 
 interface AuthContextType {
   user: User | null;
-  login: (token: string) => void;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
 }
@@ -22,40 +16,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      try {
-        const decoded: any = jwtDecode(token);
-        if (decoded.exp * 1000 < Date.now()) {
-          logout();
-        } else {
-          setUser({
-            id: decoded.sub,
-            name: decoded.name,
-            email: decoded.email,
-            role: decoded.role,
-          });
-        }
-      } catch (error) {
-        logout();
-      }
-    }
+    const currentUser = authService.getUser();
+    setUser(currentUser);
     setLoading(false);
   }, []);
 
-  const login = (token: string) => {
-    localStorage.setItem('token', token);
-    const decoded: any = jwtDecode(token);
-    setUser({
-      id: decoded.sub,
-      name: decoded.name,
-      email: decoded.email,
-      role: decoded.role,
-    });
+  const login = async (email: string, password: string) => {
+    const user = await authService.login(email, password);
+    setUser(user);
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
+    authService.logout();
     setUser(null);
   };
 

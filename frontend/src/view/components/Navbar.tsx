@@ -1,14 +1,8 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { Link } from 'react-router-dom';
+import { useNavbarViewModel } from '../../viewmodel/components/useNavbarViewModel';
 
 export default function Navbar() {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
+  const { user, handleLogout } = useNavbarViewModel();
 
   return (
     <nav className="bg-white shadow-sm">
