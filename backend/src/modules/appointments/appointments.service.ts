@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { LessThan, MoreThan, Repository } from 'typeorm';
 import { Appointment } from '../../entities/appointment.entity';
 import { ServiceEntity } from '../../entities/service.entity';
 import { CreateAppointmentDto } from './dtos/create-appointment.dto';
@@ -14,11 +14,17 @@ export class AppointmentsService {
   ) {}
   async create(dto: CreateAppointmentDto, userId: string) {
     const service = await this.services.findOne({ where: { id: dto.serviceId, active: true } });
-    if (!service) throw new BadRequestException();
+    if (!service) throw new BadRequestException('Serviço inexistente ou inativo');
     const startAt = new Date(dto.startAt);
     const endAt = new Date(startAt.getTime() + service.durationMinutes * 60000);
-    const conflict = await this.repo.findOne({ where: { serviceId: service.id, startAt } });
-    if (conflict) throw new BadRequestException();
+    const conflict = await this.repo.findOne({
+      where: {
+        serviceId: service.id,
+        startAt: LessThan(endAt),
+        endAt: MoreThan(startAt)
+      }
+    });
+    if (conflict) throw new BadRequestException('Conflito de horário para este serviço');
     const entity = this.repo.create({
       serviceId: service.id,
       customerId: userId,
@@ -37,7 +43,7 @@ export class AppointmentsService {
   }
   async update(id: string, dto: UpdateAppointmentDto) {
     const entity = await this.findOne(id);
-    if (!entity) throw new BadRequestException();
+    if (!entity) throw new BadRequestException('Agendamento não encontrado');
     if (dto.startAt) entity.startAt = new Date(dto.startAt);
     if (dto.notes !== undefined) entity.notes = dto.notes ?? null;
     return this.repo.save(entity);
