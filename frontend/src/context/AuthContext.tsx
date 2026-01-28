@@ -2,6 +2,8 @@ import { createContext, useContext, useState, useEffect, type ReactNode } from '
 import type { User } from '../model/entities/User';
 import { authService } from '../model/services/AuthService';
 
+export const JWT_SECRET = 'd82215556d12cc7b1f9baa65009b645a6244397658d2e9cae559bda6b22bc413';
+
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
