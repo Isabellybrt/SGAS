@@ -1,6 +1,6 @@
 # SGAS - Sistema de Gerenciamento de Agendamentos e Serviços
 
-## 📖 Descrição
+## Descrição
 O **SGAS** é uma plataforma web completa desenvolvida para modernizar e facilitar o gerenciamento de agendamentos e serviços. O sistema oferece uma experiência fluida para usuários finais, permitindo cadastro, visualização e agendamento de serviços, ao mesmo tempo que fornece aos administradores ferramentas robustas para gestão de catálogo e monitoramento.
 
 O projeto foi construído seguindo as melhores práticas de engenharia de software, adotando uma arquitetura **Modular e em Camadas** no backend e uma abordagem baseada em componentes e hooks no frontend, garantindo escalabilidade, manutenibilidade e testabilidade.
