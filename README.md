@@ -201,6 +201,52 @@ Após iniciar o backend, acesse:
 
 Lá você pode testar todas as rotas diretamente pelo navegador, ver os schemas de dados e exemplos de requisição/resposta.
 
+### Rotas Principais
+
+A seguir você pode visualizar as rotas principais da API e seus respectivos métodos HTTP, com exemplos de requisição e resposta da documentação Swagger.
+
+![Documentação Swagger](./frontend/src/assets/img01.jpeg)
+
+Usuários:
+- **GET /users: Listar usuários**
+![GET /users](./frontend/src/assets/img02.jpeg)
+
+Autenticação:
+- **POST /auth/register: Registrar novo usuário**
+![POST /auth/register](./frontend/src/assets/img03.jpeg)
+
+- **POST /auth/login: Autenticar usuário**
+![POST /auth/login](./frontend/src/assets/img04.jpeg)
+
+Serviços:
+- **GET /services: Listar serviços**
+![GET /services](./frontend/src/assets/img05.jpeg)
+
+- **POST /services: Criar novo serviço**
+![POST /services](./frontend/src/assets/img06.jpeg)
+
+- **PUT /services/:id: Atualizar serviço**
+![PUT /services/:id](./frontend/src/assets/img07.jpeg)
+
+- **DELETE /services/:id: Remover serviço**
+![DELETE /services/:id](./frontend/src/assets/img08.jpeg)
+
+Agendamentos:
+- **GET /appointments: Listar agendamentos**
+![GET /appointments](./frontend/src/assets/img09.jpeg)
+
+- **POST /appointments: Criar agendamento**
+![POST /appointments](./frontend/src/assets/img10.jpeg)
+
+- **GET /appointments/:id: Obter agendamento**
+![GET /appointments/:id](./frontend/src/assets/img11.jpeg)
+
+- **PUT /appointments/:id: Atualizar agendamento**
+![PUT /appointments/:id](./frontend/src/assets/img12.jpeg)
+
+- **DELETE /appointments/:id: Remover agendamento**
+![DELETE /appointments/:id](./frontend/src/assets/img13.jpeg)
+
 ---
 
 ## Destaques de Implementação e Avaliação
