@@ -88,18 +88,17 @@ O arquivo `docker-compose.yml` na raiz define:
 
 A qualidade do código é garantida através de testes automatizados.
 
-### Backend (Jest)
+### Frontend (Jest)
 - Foco em **Testes Unitários** nos Services.
 - **Mocks**: Repositórios são "mockados" para testar a lógica de negócio isoladamente, sem depender do banco de dados estar rodando.
 - Cobertura de cenários de sucesso (ex: agendamento criado) e falha (ex: conflito de horário, serviço inexistente).
 
 **Comando para rodar testes:**
 ```bash
-cd backend
+cd frontend
 npm run test
 ```
 
-### Frontend
 - Estrutura preparada para testes de componentes e hooks em `src/__tests__`.
 
 ---
@@ -177,7 +176,6 @@ TrabalhoFinal/
 │   │   ├── services/         # Regras de Negócio
 │   │   ├── repositories/     # Acesso a Dados (TypeORM)
 │   │   └── entities/         # Modelos do Banco
-│   └── test/                 # Testes e2e/unitários
 ├── frontend/               # Interface do Usuário (React + Vite)
 │   ├── src/
 │   │   ├── model/          # Regras de Negócio e Dados
@@ -189,6 +187,7 @@ TrabalhoFinal/
 │   │   │   ├── pages/      # Telas da aplicação
 │   │   │   └── components/ # Componentes reutilizáveis
 │   │   └── context/        # Contextos Globais (Auth)
+│   └── __tests__/                 # Testes unitários
 └── README.md                
 ```
 
