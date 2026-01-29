@@ -2,14 +2,14 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, Up
 import { ServiceEntity } from './service.entity';
 import { User } from './user.entity';
 
-export type AppointmentStatus = 'scheduled' | 'cancelled' | 'completed';
+export type AppointmentStatus = 'Agendado' | 'Cancelado' | 'Concluído';
 
 @Entity('appointments')
 export class Appointment {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => ServiceEntity)
+  @ManyToOne(() => ServiceEntity, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'service_id' })
   service: ServiceEntity;
 
@@ -29,7 +29,7 @@ export class Appointment {
   @Column({ type: 'timestamptz' })
   endAt: Date;
 
-  @Column({ type: 'varchar', length: 20, default: 'scheduled' })
+  @Column({ type: 'varchar', length: 20, default: 'Agendado' })
   status: AppointmentStatus;
 
   @Column({ type: 'text', nullable: true })

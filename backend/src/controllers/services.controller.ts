@@ -1,10 +1,10 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
-import { ServicesService } from './services.service';
-import { CreateServiceDto } from './dtos/create-service.dto';
-import { UpdateServiceDto } from './dtos/update-service.dto';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { RolesGuard } from '../../common/guards/roles.guard';
-import { Roles } from '../../common/decorators/roles.decorator';
+import { ServicesService } from '../services/services.service';
+import { CreateServiceDto } from '../modules/services/dtos/create-service.dto';
+import { UpdateServiceDto } from '../modules/services/dtos/update-service.dto';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { RolesGuard } from '../common/guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
 
 @Controller('services')
 export class ServicesController {

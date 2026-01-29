@@ -39,7 +39,9 @@ export default function Services() {
                 <div className="mt-2 max-w-xl text-sm text-gray-500">
                   <p className="mb-1">Duração: <span className="font-semibold">{service.durationMinutes} min</span></p>
                   <p className="mb-1">Preço: <span className="font-semibold text-green-600">R$ {service.price}</span></p>
-                  <p>Status: {service.active ? 'Ativo' : 'Inativo'}</p>
+                  <p>Status: <span className={service.status === 'Agendado' ? 'text-blue-600 font-bold' : ''}>
+                    {service.status || (service.active ? 'Ativo' : 'Inativo')}
+                  </span></p>
                 </div>
                 {isAdmin && (
                   <div className="mt-4 border-t pt-4">
