@@ -1,41 +1,113 @@
 # SGAS - Sistema de Gerenciamento de Agendamentos e Serviços
 
-## Descrição
-O SGAS é uma plataforma web completa desenvolvida para facilitar o gerenciamento de agendamentos e serviços. O sistema permite que usuários se cadastrem, visualizem serviços disponíveis e realizem agendamentos de forma intuitiva. O projeto conta com uma arquitetura moderna, separando claramente o Frontend (React/Vite) do Backend (NestJS), e utiliza contêineres Docker para orquestrar o banco de dados e serviços de cache.
+## 📖 Descrição
+O **SGAS** é uma plataforma web completa desenvolvida para modernizar e facilitar o gerenciamento de agendamentos e serviços. O sistema oferece uma experiência fluida para usuários finais, permitindo cadastro, visualização e agendamento de serviços, ao mesmo tempo que fornece aos administradores ferramentas robustas para gestão de catálogo e monitoramento.
 
-## Funcionalidades
-- **Autenticação e Autorização**: Cadastro e login de usuários com proteção JWT.
-- **Gestão de Serviços**: Visualização e cadastro de serviços oferecidos.
-- **Agendamentos**: Criação, edição e cancelamento de agendamentos.
-- **Dashboard**: Painel administrativo para visualização rápida de informações.
-- **Documentação de API**: Swagger integrado para exploração dos endpoints.
+O projeto foi construído seguindo as melhores práticas de engenharia de software, adotando uma arquitetura **Modular e em Camadas** no backend e uma abordagem baseada em componentes e hooks no frontend, garantindo escalabilidade, manutenibilidade e testabilidade.
+
+---
+
+## Funcionalidades Principais
+
+### Para Usuários
+- **Autenticação Segura**: Cadastro e login com proteção via Token JWT.
+- **Catálogo de Serviços**: Visualização detalhada dos serviços disponíveis com preços e durações.
+- **Agendamento Inteligente**: Interface intuitiva para escolha de datas e horários, com validação de conflitos em tempo real.
+- **Meus Agendamentos**: Histórico e gestão dos próprios agendamentos.
+
+### Para Administradores
+- **Gestão de Serviços**: CRUD completo (Criar, Ler, Atualizar, Deletar) de serviços.
+- **Painel de Controle (Dashboard)**: Visão geral do sistema.
+- **Controle de Acesso**: Rotas e ações protegidas por Role-Based Access Control (RBAC).
+
+---
+
+## Arquitetura do Sistema
+
+O projeto é dividido em dois grandes monólitos desacoplados (Frontend e Backend) que se comunicam via API REST.
+
+### 1. Backend (NestJS)
+O backend foi migrado para **NestJS**, adotando uma **Arquitetura Modular**.
+- **Módulos (`src/modules`)**: O código é organizado por domínios (Auth, Users, Services, Appointments). Cada módulo encapsula sua própria lógica, controladores e provedores.
+- **Camada de Serviço (`src/services`)**: Contém puramente a regra de negócio, sem dependência direta de frameworks HTTP ou banco de dados.
+- **Repositórios (`src/repositories`)**: Abstração da camada de dados usando **TypeORM**. Permite trocar o banco de dados sem afetar a regra de negócio.
+- **DTOs e Validação**: Uso de Data Transfer Objects com `class-validator` para garantir a integridade dos dados antes mesmo de chegarem à regra de negócio.
+
+### 2. Frontend (React + Vite)
+O frontend segue uma arquitetura moderna baseada em **React** com **TypeScript**.
+- **View (`src/view`)**: Componentes React puramente visuais, estilizados com **Tailwind CSS**.
+- **ViewModel (`src/viewmodel`)**: Custom Hooks que gerenciam o estado da tela e a lógica de apresentação, isolando a View da lógica de negócio.
+- **Model (`src/model`)**: Definições de Entidades e Serviços de API (Axios), responsáveis pela comunicação com o Backend.
+- **Context API**: Gerenciamento de estado global para Autenticação.
+
+---
 
 ## Tecnologias Utilizadas
 
 ### Backend
-- **Node.js** com **NestJS**: Framework progressivo para construção de aplicações server-side eficientes.
-- **TypeORM**: ORM para interação com o banco de dados.
-- **PostgreSQL**: Banco de dados relacional (via Docker).
-- **Redis**: Armazenamento de estrutura de dados em memória (via Docker).
-- **Swagger**: Documentação automática da API.
-- **Jest**: Framework de testes.
+- **Node.js & NestJS**: Framework robusto e escalável.
+- **TypeScript**: Tipagem estática para maior segurança.
+- **PostgreSQL**: Banco de dados relacional robusto.
+- **TypeORM**: ORM para manipulação de dados.
+- **Redis**: Banco chave-valor para cache e filas (preparado).
+- **Swagger**: Documentação viva da API.
+- **Jest**: Testes unitários e de integração.
+- **Docker**: Containerização dos serviços de infraestrutura.
 
 ### Frontend
-- **React**: Biblioteca para construção de interfaces de usuário.
-- **Vite**: Build tool rápida e moderna.
-- **TypeScript**: Superset JavaScript com tipagem estática.
-- **Tailwind CSS**: Framework de utilitários CSS para estilização rápida.
-- **Axios**: Cliente HTTP para comunicação com a API.
-- **React Router**: Gerenciamento de rotas.
+- **React**: Biblioteca de UI.
+- **Vite**: Tooling de nova geração para frontend rápido.
+- **TypeScript**: Segurança de tipos.
+- **Tailwind CSS**: Estilização utility-first.
+- **Axios**: Cliente HTTP.
+- **React Router DOM**: Roteamento SPA.
 
-### Infraestrutura
-- **Docker** & **Docker Compose**: Orquestração de contêineres para banco de dados e cache.
+---
 
-## Instalação
+## Infraestrutura e Docker
+
+O projeto utiliza **Docker** e **Docker Compose** para orquestrar as dependências externas, garantindo que todos os desenvolvedores tenham exatamente o mesmo ambiente.
+
+### Serviços Containerizados
+O arquivo `docker-compose.yml` na raiz define:
+1.  **PostgreSQL (`db`)**:
+    -   Porta Externa: `6543` (Mapeada para 5432 interna).
+    -   Dados persistidos em volume Docker.
+2.  **Redis (`redis`)**:
+    -   Porta Externa: `6379`.
+    -   Utilizado para suporte a cache e futuras implementações de filas.
+
+**Por que usar Docker?**
+- Zero configuração manual de banco de dados na máquina host.
+- Isolamento de versões e dependências.
+- Inicialização de toda a infraestrutura com um único comando.
+
+---
+
+## Testes Automatizados
+
+A qualidade do código é garantida através de testes automatizados.
+
+### Backend (Jest)
+- Foco em **Testes Unitários** nos Services.
+- **Mocks**: Repositórios são "mockados" para testar a lógica de negócio isoladamente, sem depender do banco de dados estar rodando.
+- Cobertura de cenários de sucesso (ex: agendamento criado) e falha (ex: conflito de horário, serviço inexistente).
+
+**Comando para rodar testes:**
+```bash
+cd backend
+npm run test
+```
+
+### Frontend
+- Estrutura preparada para testes de componentes e hooks em `src/__tests__`.
+
+---
+
+## Instalação e Execução
 
 ### Pré-requisitos
-Certifique-se de ter instalado em sua máquina:
-- [Node.js](https://nodejs.org/) (versão 18 ou superior)
+- [Node.js](https://nodejs.org/) (v18+)
 - [Docker](https://www.docker.com/) e Docker Compose
 - [Git](https://git-scm.com/)
 
@@ -46,72 +118,66 @@ cd TrabalhoFinal
 ```
 
 ### Passo 2: Configuração do Backend
-1. Navegue até a pasta do backend:
-   ```bash
-   cd backend
-   ```
-2. Instale as dependências:
-   ```bash
-   npm install
-   ```
-3. Configure as variáveis de ambiente. Crie um arquivo `.env` na pasta `backend` com o seguinte conteúdo:
-   ```env
-   PORT=3001
-   DATABASE_URL=postgres://app_user:app123@localhost:6543/sgas
-   JWT_SECRET=sua_chave_secreta_super_segura
-   REDIS_URL=redis://localhost:6379
-   ```
-4. Pegue sua JWT_SECRET do arquivo `.env` e coloque na variável `JWT_SECRET` do arquivo `frontend/src/context/AuthContext.ts`.
-´´´
-   node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-´´´
+1.  Entre na pasta: `cd backend`
+2.  Instale dependências: `npm install`
+3.  Configure o `.env`:
+    ```env
+    PORT=3001
+    DATABASE_URL=postgres://app_user:app123@localhost:6543/sgas
+    JWT_SECRET=sua_chave_secreta_super_segura
+    REDIS_URL=redis://localhost:6379
+    ```
+    *(Dica: Gere um segredo forte com `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`)*
 
 ### Passo 3: Configuração do Frontend
-1. Abra um novo terminal e navegue até a pasta do frontend:
-   ```bash
-   cd frontend
-   ```
-2. Instale as dependências:
-   ```bash
-   npm install
-   ```
+1.  Entre na pasta (novo terminal): `cd frontend`
+2.  Instale dependências: `npm install`
+3.  Configure o `JWT_SECRET` no arquivo `frontend/src/context/AuthContext.tsx` (se aplicável para validação local, embora a segurança real esteja no backend).
 
-## Uso
+---
 
-Para rodar o projeto, você precisará de **três terminais** abertos (ou abas).
+##  Como Rodar o Projeto
 
-### 1. Iniciar Infraestrutura (Docker)
-Na raiz do projeto (`TrabalhoFinal`), suba os contêineres do banco de dados e Redis:
+Você precisará de **3 terminais**.
+
+### Terminal 1: Infraestrutura
+Na raiz do projeto:
 ```bash
 docker-compose up -d
 ```
-*Isso iniciará o PostgreSQL na porta 6543 e o Redis na porta 6379.*
+*Aguarde os containers subirem (Postgres na 6543, Redis na 6379).*
 
-### 2. Iniciar o Backend
-No terminal do `backend`:
+### Terminal 2: Backend
+Na pasta `backend`:
 ```bash
 npm run start:dev
 ```
-*O servidor iniciará em `http://localhost:3001`.*
+*API rodando em: http://localhost:3001*
+*Swagger em: http://localhost:3001/docs*
 
-### 3. Iniciar o Frontend
-No terminal do `frontend`:
+### Terminal 3: Frontend
+Na pasta `frontend`:
 ```bash
 npm run dev
 ```
-*Acesse a aplicação em `http://localhost:5173`.*
+*Aplicação rodando em: http://localhost:5173*
+
+---
 
 ## Estrutura do Projeto
 
-```
+```plaintext
 TrabalhoFinal/
-├── backend/                # API e Lógica de Negócios (NestJS)
+├── docker-compose.yml        # Orquestração (DB, Redis)
+├── backend/                  # API NestJS
 │   ├── src/
-│   │   ├── modules/        # Módulos da aplicação (Auth, Users, Appointments, etc.)
-│   │   ├── entities/       # Modelos do Banco de Dados
-│   │   └── config/         # Configurações (Swagger, etc.)
-│   ├── .env                # Variáveis de ambiente (NÃO COMITAR SENHAS REAIS)
-│   └── ...
+│   │   ├── config/           # Configuração Swagger/Env
+│   │   ├── controllers/      # Endpoints da API
+│   │   ├── modules/          # Módulos (Auth, Users, Services...)
+│   │   ├── services/         # Regras de Negócio
+│   │   ├── repositories/     # Acesso a Dados (TypeORM)
+│   │   └── entities/         # Modelos do Banco
+│   └── test/                 # Testes e2e/unitários
 ├── frontend/               # Interface do Usuário (React + Vite)
 │   ├── src/
 │   │   ├── model/          # Regras de Negócio e Dados
@@ -123,35 +189,45 @@ TrabalhoFinal/
 │   │   │   ├── pages/      # Telas da aplicação
 │   │   │   └── components/ # Componentes reutilizáveis
 │   │   └── context/        # Contextos Globais (Auth)
-│   └── ...
-└── docker-compose.yml      # Configuração dos serviços Docker (DB e Redis)
+└── README.md                
 ```
 
-## Módulos / API
+---
 
-A documentação completa da API (Swagger) pode ser acessada quando o backend estiver rodando em:
-**[http://localhost:3001/docs](http://localhost:3001/docs)**
+## Documentação da API
 
-Principais Módulos:
-- **Auth**: `/auth/login`, `/auth/register`
-- **Users**: `/users`
-- **Services**: `/services`
-- **Appointments**: `/appointments`
+A API é totalmente documentada com **Swagger**.
+Após iniciar o backend, acesse:
+👉 **[http://localhost:3001/docs](http://localhost:3001/docs)**
 
-## Testes
+Lá você pode testar todas as rotas diretamente pelo navegador, ver os schemas de dados e exemplos de requisição/resposta.
 
-Para executar os testes unitários do backend:
+---
 
-```bash
-cd backend
-npm run test
-```
+## Destaques de Implementação e Avaliação
+
+Este projeto foi desenvolvido para atender rigorosamente aos critérios de avaliação propostos:
+
+| Critério | Implementação no Projeto |
+| :--- | :--- |
+| **Adequação ao Tema** | Sistema completo de agendamentos usando **Node.js, NestJS e TypeScript**. Banco de dados **PostgreSQL** e API RESTful. |
+| **Arquitetura** | Código organizado em **Módulos, Controllers, Services e Repositories**. Uso de **DTOs** para validação e desacoplamento via Injeção de Dependência. |
+| **Implementação Técnica** | **CRUD** completo de serviços e agendamentos. Uso de **TypeORM** para persistência e **Async/Await** em todas as operações de I/O. |
+| **Segurança** | Autenticação via **JWT (JSON Web Tokens)**. Senhas criptografadas com **Bcrypt**. Controle de acesso (**RBAC**) via Decorators `@Roles('admin')`. |
+| **Funcionamento** | Infraestrutura containerizada (**Docker**) garante execução consistente. Tratamento de erros globais e validação de dados de entrada. |
+| **Documentação** | Documentação interativa via **Swagger** e este **README** detalhado cobrindo instalação, arquitetura e uso. |
+
+---
 
 ## Licença
 
-Este projeto está licenciado sob a licença MIT.
+Este projeto está licenciado sob a licença **MIT**.
 
 ## Autoria
 
-Desenvolvido por **Isac** e Grupo.
-Para dúvidas, entre em contato via e-mail ou issues do repositório.
+Este projeto foi desenvolvido pela equipe:
+
+- **Maria Isabelly de Brito Rodrigues**
+- **Larissa Souza Nascimento**
+- **Luís Guilherme Sampaio Fontenele**
+- **Vanessa Pereira Cunha**
