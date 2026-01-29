@@ -4,6 +4,6 @@ export interface Appointment {
   id: string;
   startAt: string;
   endAt: string;
-  status: 'scheduled' | 'cancelled' | 'completed';
+  status: 'Agendado' | 'Cancelado' | 'Concluído';
   service: Service;
 }

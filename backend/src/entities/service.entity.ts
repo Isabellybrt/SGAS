@@ -17,6 +17,9 @@ export class ServiceEntity {
   @Column({ type: 'boolean', default: true })
   active: boolean;
 
+  @Column({ type: 'varchar', length: 20, default: 'Ativo' })
+  status: string;
+
   @CreateDateColumn()
   createdAt: Date;
 

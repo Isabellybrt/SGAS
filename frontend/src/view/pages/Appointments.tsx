@@ -23,7 +23,7 @@ export default function Appointments() {
                 required
               >
                 <option value="">Selecione...</option>
-                {services.map(s => (
+                {services.filter(s => s.active).map(s => (
                   <option key={s.id} value={s.id}>{s.name} ({s.durationMinutes} min)</option>
                 ))}
               </select>
@@ -69,12 +69,12 @@ export default function Appointments() {
                       {format(new Date(apt.startAt), 'dd/MM/yyyy HH:mm')} - {format(new Date(apt.endAt), 'HH:mm')}
                     </p>
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium mt-2
-                      ${apt.status === 'scheduled' ? 'bg-blue-100 text-blue-800' : 
-                        apt.status === 'cancelled' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}>
-                      {apt.status === 'scheduled' ? 'Agendado' : apt.status === 'cancelled' ? 'Cancelado' : 'Concluído'}
+                      ${apt.status === 'Agendado' ? 'bg-blue-100 text-blue-800' : 
+                        apt.status === 'Cancelado' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}>
+                      {apt.status}
                     </span>
                   </div>
-                  {apt.status === 'scheduled' && (
+                  {apt.status === 'Agendado' && (
                     <button 
                       onClick={() => handleCancel(apt.id)}
                       className="text-red-600 hover:text-red-800 text-sm font-medium border border-red-200 px-3 py-1 rounded hover:bg-red-50"
